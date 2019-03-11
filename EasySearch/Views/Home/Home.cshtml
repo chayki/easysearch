@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+<script src="https://apis.google.com/js/client.js?onload=onLoad"></script>
+<script>
+    window['onLoad'] = function () {
+        gapi.load('auth2', function () {
+            gapi.auth2.init({
+                client_id: "443877573989-c22o4hakfogbgr6gkpb8f35hsmrks6od.apps.googleusercontent.com"
+            });
+        });
+        console.log("load called");
+    };
+
+
+</script>
+
+<meta name="google-signin-client_id" content="443877573989-c22o4hakfogbgr6gkpb8f35hsmrks6od.apps.googleusercontent.com">
+
+<body>
+    @*<h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    @*<div class="g-signin2" data-onsuccess="onSignIn"></div>*@
+
+    <div id="loading">
+        <img id="loading-image" src="~/images/ajax-loading.gif" alt="Loading..." />
+    </div>
+    <div class="container-fluid" style="padding-top:100px;padding-bottom:30px;position:fixed;z-index:5;background-color:#f1f1f1">
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="d-inline">
+                    <form class="form-inline my-2 my-lg-0 col-xl-12 d-flex justify-content-xl-end">
+                        <div class="form-group d-inline-block float-left align-middle mr-auto p-2">
+                            <ol class="breadcrumb" id="folderTreeBreadCrumb">
+                                <li class="breadcrumb-item d-none" id="liTxtNewFolder">
+                                    @*<input class="small" type="text" id="txtNewFolder" onkeydown="checkAndCreateFolder(event)" />
+                                        </li>
+
+
+                                        <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
+                                            <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                                        </a>
+
+
+                                        <a href="#" id="iconCloseNewFolder" class="d-none" onclick="hideNewFolderTextBox(this)">
+                                            <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
+                                        </a>*@
+
+
+
+                                    @*<li class="breadcrumb-item" id="iconCreateNewFolder">*@
+
+                                    @*</li>*@
+
+                            </ol>
+                            @*<a href="#" id="iconCloseNewFolder" class="d-none" onclick="hideNewFolderTextBox(this)">
+                                    <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
+                                </a>*@
+                            @*<a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
+                                    <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                                </a>*@
+
+                        </div>
+
+                    </form>
+                    @*<div class="d-inline">
+                            <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
+                                <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                            </a>
+                        </div>*@
+                </div>
+            </div>
+            <div class="col-md-3">
+                <form class="form-inline">
+                    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <hr style="background-color:black" />
+
+        <div class="row" id="foldersHeaderDiv">
+            <div class="col-md-10"><h6>Folders</h6></div>
+            <div class="col-md-1">
+                <button class="btn btn-sm" id="foldersDeleteButton">Delete</button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm d-none" id="foldersDeleteCancelButton">Cancel</button>
+            </div>
+        </div>
+
+        <hr style="background-color:black" />
+        <div class="row" id="foldersDiv">
+            <div class="col-md-2" id="newFolderDiv">
+                <a href="#" onclick="showNewFolderTextBox(this)">
+                    <i class="fa-folder-plus fas"></i>
+                </a>
+
+            </div>
+
+        </div>
+        <hr style="background-color:black; z-index:5" />
+        <div class="row">
+            <div class="col-md-6"><h6>Images</h6></div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="imageUrlInput" />
+
+
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm" id="uploadImageButton">Upload</button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm" id="imagesDeleteButton">Delete</button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm d-none" id="imagesDeleteCancelButton">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid" style="padding-top:450px; z-index:-1">
+        @*<div class="row">
+                <div class="col-md-6"><h6>Images</h6></div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+
+
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-sm">Upload</button>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-sm" id="imagesDeleteButton">Delete</button>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-sm d-none" id="imagesDeleteCancelButton">Cancel</button>
+                </div>
+            </div>*@
+        <div id="imagesDiv" class="row" style="overflow-y: scroll">
+
+            @*<div id="newImageDiv" class="col-md-4">
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="input-file-now-custom-2" class="file-upload"
+                               data-height="500" />
+                    </div>
+                </div>*@
+        </div>
+    </div>
+
+    @*<div class="col-md-2">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+            </div>
+        <div class="col-md-2">
+                <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
+
+        </div>*@
+    </div>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+
+</body>
+
