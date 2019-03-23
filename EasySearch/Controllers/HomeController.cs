@@ -139,6 +139,27 @@ namespace EasySearch.Controllers
             return isCreationSuccessful;
         }
 
+        [Route("Search")]
+        public SearchResult Search(string searchString)
+        {
+            var headers = new Dictionary<string, string>();
+            var idToken = HttpContext.Request?.Headers["id_token"];
+            var handler = new JwtSecurityTokenHandler();
+            var tokenS = handler.ReadToken(idToken) as JwtSecurityToken;
+            var sub = tokenS.Claims.First(claim => claim.Type == "sub").Value;
+            headers.Add(Constants.SubHeader, sub);
+
+            string searchQuery = HttpContext.Request.Query["searchQuery"].ToString();
+            string folderPath = HttpContext.Request.Query["folderName"].ToString();
+            Task<SearchResult> task = Task.Run(() => _storageService.SearchImages(
+                folderPath,
+                searchQuery,
+                headers));
+            task.Wait();
+            SearchResult directory = task.Result;
+            return directory;
+        }
+
         [Route("GetDirectoryItems")]
         public StorageDirectory GetDirectoryItems()
         {

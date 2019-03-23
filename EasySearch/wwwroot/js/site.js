@@ -12,8 +12,17 @@ function showNewFolderTextBox(e) {
 
     var newFolderDiv = $('#newFolderDiv');
     newFolderDiv.empty();
-    var newFolderTextBox = $('<input>').attr('type', 'text').attr('id', 'txtNewFolder').attr('onkeydown', 'checkAndCreateFolder(event)').addClass('small');
-    newFolderDiv.append(newFolderTextBox);
+    //var newFolderTextBox = $('<input>').attr('type', 'text').attr('id', 'txtNewFolder').attr('onkeydown', 'checkAndCreateFolder(event)').addClass('small');
+    //newFolderDiv.append(newFolderTextBox);
+
+    $('#txtNewFolder').css('display', 'block');
+
+    $('#createNewFolderAnchor').css('display', 'none');
+    $('#foldersDeleteButton').css('display', 'none');
+    $('#txtNewFolder').focus();
+   
+
+
 }
 
 function hideNewFolderTextBox(e) {
@@ -41,11 +50,23 @@ function checkAndCreateFolder(e) {
             success: function (response) {
 
                 var foldersDiv = $("#foldersDiv");
-                var newFolderDiv = $("#newFolderDiv");
+                var newFolderDiv = $("#newFolderDiv"); 
+                var createNewFolderListItem = $('#createNewFolderAnchor');
                 //var imagesDiv = $("#imagesDiv");
                 var folderIcon = $('<i>').addClass('fa').addClass('fa-folder-open'); //'< i class="fa fa-folder-open" aria - hidden="true" ></i >';
-                var folderAnchor = $('<a>').attr('href', '#').addClass('directory').append(folderName + "/");
+                var folderAnchor = $('<a>').attr('href', '#').addClass('directory').addClass('list-group-item').append(folderName + "/");
+                var checkbox = $('<input>').attr('type', 'radio').addClass('').attr('value', getCurrentFolderPath() + folderName);
+
                 var $tr = $('<div>').addClass('col-md-2').append(folderIcon).append(folderAnchor).insertAfter(newFolderDiv);
+                //$("#verticalFoldersDiv").append(folderAnchor).insertBefore(createNewFolderListItem);
+                //folderAnchor.insertBefore(createNewFolderListItem);
+                var folderItem = $('<div>').addClass("row");
+                $('<div>').addClass('col-md-1').append(checkbox).appendTo(folderItem);
+                $('<div>').addClass('col-md-10').append(folderAnchor).appendTo(folderItem);
+                $("#verticalFoldersDiv").prepend(folderItem);
+                createNewFolderListItem.css('display', 'block');
+                $('#txtNewFolder').css('display', 'none');
+                $('#foldersDeleteButton').css('display', 'block');
                 //if (response.folderNames.length > 0) {
                 //    //$('<h6>').append('Folders').insertBefore(foldersDiv);
                 //}
@@ -77,12 +98,18 @@ function checkAndCreateFolder(e) {
         $('#iconCreateNewFolder').removeClass('d-none');
         return false;
     }
+
+    if (keyCode === 27) {
+        $('#txtNewFolder').css('display', 'none');
+        $('#createNewFolderAnchor').css('display', 'block');
+        $('#foldersDeleteButton').css('display', 'block');
+    }
 }
 
 function getCurrentFolderPath() {
     if (typeof Cookies.get('current_folder_path') === 'undefined') {
-        setCurrentFolderInCookie('/test12/');
-        return "/test12/";
+        setCurrentFolderInCookie('/Home/');
+        return "/Home/";
     } else {
         return Cookies.get('current_folder_path');
     }
@@ -116,24 +143,85 @@ function getDirectoryItemsAndPopulate(currentFolderPath) {
             foldersDiv.empty();
             foldersDiv.append(newFolderDiv);
             var imagesDiv = $("#imagesDiv");
+            var verticalFoldersDiv = $("#verticalFoldersDiv").empty();
             imagesDiv.empty();
-             //'< i class="fa fa-folder-open" aria - hidden="true" ></i >';
-            if (response.folderNames.length > 0) {
-                //$('<h6>').append('Folders').insertBefore(foldersDiv);
-            }
+            //var newFolderIcon = $('<i>').addClass('fa-folder-plus').addClass('fas');
+            //var newFolderAnchor = $('<a>').attr('href', '#').attr('onclick', 'showNewFolderTextBox(this)').addClass('list-group-item').attr('id', 'createNewFolderAnchor');
+            var newFolderTextBox = $('<input>').attr('type', 'text').attr('id', 'txtNewFolder').attr('onkeydown', 'checkAndCreateFolder(event)').addClass('list-group-item').css('display', 'none');
+            //newFolderAnchor.append(newFolderIcon);
+            verticalFoldersDiv.append(newFolderTextBox);
+            //'< i class="fa fa-folder-open" aria - hidden="true" ></i >';
+            if (response.folderNames !== null) {
+                if (response.folderNames.length > 0) {
+                    //$('<h6>').append('Folders').insertBefore(foldersDiv);
+                }
+                // 
 
-            $.each(response.folderNames, function (i, item) {
-                var folderIcon = $('<i>').addClass('fa').addClass('fa-folder-open');
-                var folderAnchor = $('<a>').attr('href', '#').append(item).addClass('directory');
-                var checkbox = $('<input>').attr('type', 'checkbox').addClass('d-none').attr('value', getCurrentFolderPath() + item);
-                var $tr = $('<div>').addClass('col-md-2').append(checkbox).append(folderIcon).append(folderAnchor).insertAfter(newFolderDiv);
-            });
-            $.each(response.files, function (i, item) {
-                var image = $('<img>').attr('src', item.path).css('width', '200px').css('height', '200px'); //.addClass('img-thumbnail');
-                var thumbnailDiv = $('<div>').addClass('thumbnail').addClass('card').append(image);
-                var checkbox = $('<input>').attr('type', 'checkbox').addClass('d-none').attr('value', item.name);
-                var $tr = $('<div>').addClass('col-md-2').append(checkbox).append(thumbnailDiv).appendTo(imagesDiv);
-            });
+                $.each(response.folderNames, function (i, item) {
+                    item = item.replace(getCurrentFolderPath(), '');
+                    var folderIcon = $('<i>').addClass('fa').addClass('fa-folder-open');
+                    var folderAnchor = $('<a>').attr('href', '#').append(item).addClass('directory').addClass("list-group-item");
+                    var checkbox = $('<input>').attr('type', 'radio').addClass('').attr('value', getCurrentFolderPath() + item);
+                    var $tr = $('<div>').addClass('col-md-2').append(checkbox).append(folderIcon).append(folderAnchor).insertAfter(newFolderDiv);
+                    var folderItem = $('<div>').addClass("row");
+                    $('<div>').addClass('col-md-1').append(checkbox).appendTo(folderItem);
+                    $('<div>').addClass('col-md-10').append(folderAnchor).appendTo(folderItem);
+                    verticalFoldersDiv.append(folderItem);
+                   
+                });
+                //var newFolderIcon = $('<i>').addClass('fa-folder-plus').addClass('fas');
+                //var newFolderAnchor = $('<a>').attr('href', '#').attr('onclick', 'showNewFolderTextBox(this)').addClass('list-group-item').attr('id', 'createNewFolderAnchor');
+                //var newFolderTextBox = $('<input>').attr('type', 'text').attr('id', 'txtNewFolder').attr('onkeydown', 'checkAndCreateFolder(event)').addClass('list-group-item').css('display', 'none');
+                //newFolderAnchor.append(newFolderIcon);
+                //verticalFoldersDiv.append(newFolderAnchor).append(newFolderTextBox);
+                //$('#verticalFoldersDiv').on('click', 'a', function () {
+                //    alert("clicked");
+                //});
+                $.each(response.files, function (i, item) {
+                    var anchor = $('<a>').attr('href', item.path).attr("target", "_blank");
+                    var image = $('<img>').attr('src', item.path).css('width', '200px').css('height', '200px').appendTo(anchor); //.addClass('img-thumbnail');
+                    var thumbnailDiv = $('<div>').addClass('thumbnail').addClass('card').append(anchor);
+                    var checkbox = $('<input>').attr('type', 'checkbox').addClass('d-none').attr('value', item.name);
+                    var $tr = $('<div>').addClass('col-md-2').append(checkbox).append(thumbnailDiv).appendTo(imagesDiv);
+                });
+            }
+        },
+        failure: function (response) {
+            alert(response);
+        },
+        complete: function () {
+            $('#loading').hide();
+        }
+    });
+}
+
+function searchForImagesAndPopulate(folderPath, searchQuery) {
+    $("#loading").show();
+    $.ajax({
+        type: "GET",
+        url: "/Search?folderName=" + folderPath + "&searchQuery=" + searchQuery,
+        headers: {
+            'id_token': getIdTokenFromCookie()
+        },
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+            //var foldersDiv = $("#foldersDiv");
+            //var newFolderDiv = $("#newFolderDiv");
+            //foldersDiv.empty();
+            //foldersDiv.append(newFolderDiv);
+            var imagesDiv = $("#imagesDiv");
+            imagesDiv.empty();
+            //'< i class="fa fa-folder-open" aria - hidden="true" ></i >';
+            if (response.files !== null) {
+                $.each(response.files, function (i, item) {
+                    var anchor = $('<a>').attr('href', item.path).attr("target", "_blank");
+                    var image = $('<img>').attr('src', item.path).css('width', '200px').css('height', '200px').appendTo(anchor); //.addClass('img-thumbnail');
+                    var thumbnailDiv = $('<div>').addClass('thumbnail').addClass('card').append(anchor);
+                    var checkbox = $('<input>').attr('type', 'checkbox').addClass('d-none').attr('value', item.name);
+                    var $tr = $('<div>').addClass('col-md-2').append(checkbox).append(thumbnailDiv).appendTo(imagesDiv);
+                });
+            }
         },
         failure: function (response) {
             alert(response);
@@ -169,6 +257,10 @@ $(document).ready(function () {
             getDirectoryItemsAndPopulate(newFolderPath);
             regenerateBreadcrumb(newFolderPath);
         });
+
+        //$('#verticalFoldersDiv').on('click', 'a', function () {
+        //    alert("clicked");
+        //});
     }
 });
 
@@ -189,12 +281,12 @@ $(document.body).on("click", ".breadcrumb-item", function () {
 });
 
 $(document.body).on("click", "#foldersDeleteButton", function () {
-    if (!$("#foldersDeleteButton").hasClass('btn-danger')) {
-        $("#foldersDiv INPUT[type='checkbox']").removeClass("d-none");
-        $("#foldersDeleteButton").addClass('btn-danger');
-        $('#foldersDeleteCancelButton').removeClass('d-none');
-    } else {
-        var checkedBoxes = $("#foldersDiv INPUT[type='checkbox']").filter(':checked');
+    //if (!$("#foldersDeleteButton").hasClass('btn-danger')) {
+    //    $("#foldersDiv INPUT[type='checkbox']").removeClass("d-none");
+    //    $("#foldersDeleteButton").addClass('btn-danger');
+    //    $('#foldersDeleteCancelButton').removeClass('d-none');
+    //} else {
+        var checkedBoxes = $("#verticalFoldersDiv INPUT[type='radio']").filter(':checked');
         if (checkedBoxes.length < 1) {
             alert('please select atleast one folder to delete');
             return false;
@@ -211,7 +303,9 @@ $(document.body).on("click", "#foldersDeleteButton", function () {
                 contentType: "application/json",
                 dataType: "json",
                 success: function (response) {
-                    $(item).parent().remove();
+                    
+                    $(item).parent().next().remove();
+                    $(item).remove();
                 },
                 failure: function (response) {
                     alert(response);
@@ -222,7 +316,7 @@ $(document.body).on("click", "#foldersDeleteButton", function () {
             });
         });
 
-    }  
+    //}  
 });
 
 $(document.body).on("click", "#imagesDeleteButton", function () {
@@ -267,6 +361,13 @@ $(document.body).on("click", "#imagesDeleteCancelButton", function () {
     $("#imagesDiv INPUT[type='checkbox']").addClass("d-none");
     $("#imagesDeleteButton").removeClass('btn-danger');
     $('#imagesDeleteCancelButton').addClass('d-none');
+});
+
+$(document.body).on("click", "#btnImageSearch", function () {
+    var searchText = $('#txtImageSearch').val();
+    var folderPath = getCurrentFolderPath();
+    searchForImagesAndPopulate(folderPath, searchText);
+    return false;
 });
 
 $(document.body).on("click", "#uploadImageButton", function () {

@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <NameOfLastUsedPublishProfile>CustomProfile</NameOfLastUsedPublishProfile>
-    <GoogleCloudPublishChoice>Gce</GoogleCloudPublishChoice>
     <GoogleCloudPublishConfiguration>Release</GoogleCloudPublishConfiguration>
     <GoogleKubernetesEnginePublishDeploymentName>easy-search</GoogleKubernetesEnginePublishDeploymentName>
     <GoogleKubernetesEnginePublishVersion>20190210t150828</GoogleKubernetesEnginePublishVersion>
@@ -10,12 +9,13 @@
     <GoogleKubernetesEnginePublishExposeService>False</GoogleKubernetesEnginePublishExposeService>
     <GoogleKubernetesEnginePublishExposePublicService>False</GoogleKubernetesEnginePublishExposePublicService>
     <GoogleKubernetesEnginePublishOpenWebsite>False</GoogleKubernetesEnginePublishOpenWebsite>
-    <GoogleComputeEnginePublishInstanceName>aspnet-easysearch</GoogleComputeEnginePublishInstanceName>
-    <GoogleComputeEnginePublishInstanceZone>asia-south1-a</GoogleComputeEnginePublishInstanceZone>
-    <GoogleComputeEnginePublishInstanceUserName>easysearch</GoogleComputeEnginePublishInstanceUserName>
     <GoogleComputeEnginePublishOpenWebsite>False</GoogleComputeEnginePublishOpenWebsite>
     <GoogleComputeEnginePublishLaunchRemoteDebugger>False</GoogleComputeEnginePublishLaunchRemoteDebugger>
     <GoogleComputeEnginePublishSiteName>Default Web Site</GoogleComputeEnginePublishSiteName>
     <ShowAllFiles>true</ShowAllFiles>
+    <GoogleCloudPublishChoice>Gce</GoogleCloudPublishChoice>
+    <GoogleComputeEnginePublishInstanceName>aspnet-easysearch</GoogleComputeEnginePublishInstanceName>
+    <GoogleComputeEnginePublishInstanceZone>asia-south1-a</GoogleComputeEnginePublishInstanceZone>
+    <GoogleComputeEnginePublishInstanceUserName>easysearch</GoogleComputeEnginePublishInstanceUserName>
   </PropertyGroup>
 </Project>

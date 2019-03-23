@@ -22,5 +22,10 @@ namespace EasySearch
         Task<StorageDirectory> GetDirectoryItems(
             string folderPath,
             IDictionary<string, string> requestHeaders);
+
+        Task<SearchResult> SearchImages(
+            string folderPath,
+            string searchQuery,
+            IDictionary<string,string> requestHeaders);
     }
 }

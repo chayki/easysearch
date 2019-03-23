@@ -111,3 +111,15 @@ body {
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
+
+.modal-backdrop.in {
+    z-index: auto;
+}
+
+.modal-backdrop {
+    display: none;
+}
+
+.modal {
+    background: rgba(0,0,0,0.5);
+}
