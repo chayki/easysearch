@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace EasySearch.Controllers
 {
@@ -111,13 +114,38 @@ namespace EasySearch.Controllers
 
             string targetPath = HttpContext.Request.Query["targetPath"].ToString();
             string imageUrl = HttpContext.Request.Query["url"].ToString();
+            string labelsString = HttpContext.Request.Query["labels"].ToString();
             Task<Boolean> task = Task.Run(() => _storageService.UploadImage(
                 targetPath,
                 imageUrl,
-                headers));
+                headers, labelsString));
             task.Wait();
             bool isCreationSuccessful = task.Result;
             return isCreationSuccessful;
+        }
+
+        [HttpPost("UploadImageFile")]
+        public Boolean UploadImageFile()
+        {
+            var headers = new Dictionary<string, string>();
+            var idToken = HttpContext.Request?.Headers["id_token"];
+            var handler = new JwtSecurityTokenHandler();
+            var tokenS = handler.ReadToken(idToken) as JwtSecurityToken;
+            var sub = tokenS.Claims.First(claim => claim.Type == "sub").Value;
+            headers.Add(Constants.SubHeader, sub);
+            string jsonData = new StreamReader(HttpContext.Request.Body).ReadToEnd();
+            JObject json = JObject.Parse(jsonData);
+            string imageContent = json.GetValue("imageContent").ToString();
+            string targetPath = json.GetValue("targetPath").ToString();
+            List<string> labels = json.GetValue("labels").ToObject<List<string>>();
+            Task<Boolean> task = Task.Run(() => _storageService.UploadImageFile(
+               targetPath,
+               imageContent,
+               headers,
+               labels));
+            task.Wait();
+            bool isUploadSuccessful = task.Result;
+            return isUploadSuccessful;
         }
 
         [Route("DeleteImage")]
@@ -178,6 +206,30 @@ namespace EasySearch.Controllers
             task.Wait();
             StorageDirectory directory = task.Result;
             return directory;
+        }
+
+        [Route("GetImageLabels")]
+        public List<string> GetImageLabels()
+        {
+            string jsonData = new StreamReader(HttpContext.Request.Body).ReadToEnd();
+            JObject json = JObject.Parse(jsonData);
+            string imageContent = json.GetValue("imageContent").ToString();
+            string imageUrl = json.GetValue("imageUrl").ToString();
+
+            if(!string.IsNullOrEmpty(imageUrl))
+            {
+                using (var webClient = new WebClient())
+                {
+                    byte[] imageBytes = webClient.DownloadData(imageUrl);
+                    
+                    //imageContent = System.Text.Encoding.Default.GetString(imageBytes,0,imageBytes.Length);
+                    imageContent = "data:image/jpg;base64," + Convert.ToBase64String(imageBytes, 0, imageBytes.Length);
+                }
+            }
+            Task<List<string>> task = Task.Run(() => _storageService.GetImageLabels(
+                imageContent));
+            task.Wait();
+            return task.Result;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -15,7 +15,12 @@ namespace EasySearch
         Task<Boolean> UploadImage(
             string targetPath,
             string url,
-            IDictionary<string, string> requestHeaders);
+            IDictionary<string, string> requestHeaders, string labelsString);
+        Task<Boolean> UploadImageFile(
+            string targetPath,
+            string imageContent,
+            IDictionary<string, string> requestHeaders,
+            List<string> labels);
         Task<Boolean> DeleteImage(
             string imageAbsolutePath,
             IDictionary<string, string> requestHeaders);
@@ -27,5 +32,7 @@ namespace EasySearch
             string folderPath,
             string searchQuery,
             IDictionary<string,string> requestHeaders);
+
+        Task<List<string>> GetImageLabels(string imageContent);
     }
 }

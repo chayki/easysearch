@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace EasySearch.Services
@@ -102,15 +105,52 @@ namespace EasySearch.Services
         public async Task<Boolean> UploadImage(
             string targetPath,
             string url,
-            IDictionary<string, string> requestHeaders)
+            IDictionary<string, string> requestHeaders,
+            string labelsString)
         {
-            var requestUri = string.Format("storage/uploadImage?url={0}&targetPath={1}&userName={2}",
+            var requestUri = string.Format("storage/uploadImage?url={0}&targetPath={1}&userName={2}&labels={3}",
                 url,
                 targetPath,
-                requestHeaders[Constants.SubHeader]);
+                requestHeaders[Constants.SubHeader], HttpUtility.UrlEncode(labelsString));
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
                 requestUri);
+            foreach (KeyValuePair<string, string> keyValuePair in requestHeaders)
+            {
+                request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            var client = _clientFactory.CreateClient("storageservice");
+            var response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<Boolean> UploadImageFile(
+            string targetPath,
+            string imageContent,
+            IDictionary<string, string> requestHeaders,
+            List<string> labels = null)
+        {
+            var requestUri = string.Format("storage/uploadImage");
+            Dictionary<string, object> postData = new Dictionary<string, object>()
+            {
+                {"imageContent",imageContent },
+                {"targetPath", targetPath },
+                {"userName", requestHeaders[Constants.SubHeader] },
+                {"labels", labels }
+            };
+            var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                requestUri);
+            var jsonString = JsonConvert.SerializeObject(postData);
+            request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json"); ;
             foreach (KeyValuePair<string, string> keyValuePair in requestHeaders)
             {
                 request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
@@ -234,6 +274,33 @@ namespace EasySearch.Services
                 searchResult.files = files;
             }
             return searchResult;
+        }
+
+        public async Task<List<String>> GetImageLabels(string imageContent)
+        {
+            var requestUri = string.Format("vision/getImageLabels");
+            Dictionary<string, string> postData = new Dictionary<string, string>()
+            {
+                {"imageContent",imageContent },
+                {"imageUrl", "" }
+            };
+            var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                requestUri);
+            var jsonString = JsonConvert.SerializeObject(postData);
+            request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json"); ;
+
+            var client = _clientFactory.CreateClient("storageservice");
+            var response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                JArray imageEntities = JArray.Parse(response.Content.ReadAsStringAsync().Result);
+                return imageEntities.ToObject<List<string>>();
+            }
+            else
+            {
+                return new List<string>();
+            }
         }
     }
 }

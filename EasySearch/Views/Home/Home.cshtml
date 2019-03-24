@@ -38,7 +38,7 @@
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 <script src="https://apis.google.com/js/client.js?onload=onLoad"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+@*<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>*@
 <script src="~/lib/bootstrap/dist/js/bootstrap-imageupload.js"></script>
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-imageupload.css" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -66,7 +66,7 @@
     <div id="loading">
         <img id="loading-image" src="~/images/ajax-loading.gif" alt="Loading..." />
     </div>
-    <div class="container-fluid" style="padding-top:100px;padding-bottom:30px;position:fixed;z-index:5;background-color:#f1f1f1">
+    <div class="container-fluid" style="padding-top:70px;padding-bottom:20px;position:fixed;z-index:5;background-color:#f1f1f1">
 
         <div class="row">
             <div class="col-md-9">
@@ -76,17 +76,17 @@
                             <ol class="breadcrumb" id="folderTreeBreadCrumb">
                                 <li class="breadcrumb-item d-none" id="liTxtNewFolder">
                                     @*<input class="small" type="text" id="txtNewFolder" onkeydown="checkAndCreateFolder(event)" />
-                                        </li>
+                                    </li>
 
 
-                                        <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
-                                            <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
-                                        </a>
+                                    <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
+                                        <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                                    </a>
 
 
-                                        <a href="#" id="iconCloseNewFolder" class="d-none" onclick="hideNewFolderTextBox(this)">
-                                            <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
-                                        </a>*@
+                                    <a href="#" id="iconCloseNewFolder" class="d-none" onclick="hideNewFolderTextBox(this)">
+                                        <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
+                                    </a>*@
 
 
 
@@ -96,83 +96,136 @@
 
                             </ol>
                             @*<a href="#" id="iconCloseNewFolder" class="d-none" onclick="hideNewFolderTextBox(this)">
-                                    <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
-                                </a>*@
+                                <span class=""><i class='fa-window-close fas ml-2' style="color:red"></i></span>
+                            </a>*@
                             @*<a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
-                                    <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
-                                </a>*@
+                                <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                            </a>*@
 
                         </div>
 
                     </form>
                     @*<div class="d-inline">
-                            <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
-                                <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
-                            </a>
-                        </div>*@
+                        <a href="#" id="iconCreateNewFolder" onclick="showNewFolderTextBox(this)" class="ml-1">
+                            <span class=""><i class='fa-folder-plus fas ml-2'></i></span>
+                        </a>
+                    </div>*@
                 </div>
             </div>
             <div class="col-md-3">
                 <form class="form-inline">
                     <input class="form-control" id="txtImageSearch" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" id="btnImageSearch">Search</button>
+                    <button class="btn-file btn-md my-2 my-sm-0 ml-3" id="btnImageSearch">Search</button>
                 </form>
             </div>
         </div>
         @*<hr style="background-color:black" />
 
-            <div class="row" id="foldersHeaderDiv">
-                <div class="col-md-10"><h6>Folders</h6></div>
-                <div class="col-md-1">
-                    <button class="btn btn-sm" id="foldersDeleteButton">Delete</button>
-                </div>
-                <div class="col-md-1">
-                    <button class="btn btn-sm d-none" id="foldersDeleteCancelButton">Cancel</button>
-                </div>
-            </div>*@
+        <div class="row" id="foldersHeaderDiv">
+            <div class="col-md-10"><h6>Folders</h6></div>
+            <div class="col-md-1">
+                <button class="btn btn-sm" id="foldersDeleteButton">Delete</button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm d-none" id="foldersDeleteCancelButton">Cancel</button>
+            </div>
+        </div>*@
 
         @*<hr style="background-color:black" />
-            <div class="row" id="foldersDiv">*@
+        <div class="row" id="foldersDiv">*@
         @*<div class="col-md-2" id="newFolderDiv">
-                <a href="#" onclick="showNewFolderTextBox(this)">
-                    <i class="fa-folder-plus fas"></i>
-                </a>
+            <a href="#" onclick="showNewFolderTextBox(this)">
+                <i class="fa-folder-plus fas"></i>
+            </a>
 
-            </div>*@
+        </div>*@
 
         @*</div>*@
         <hr style="background-color:black; z-index:5" />
-        
-    <div class="row">
+        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Launch demo modal
+        </button>*@
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="" id="imgPreview" class="img-thumbnail rounded float-left" />
+                            </div>
+                            <div class="col-md-6">
+                                <p class="row" id="imageLabels" style="word-break: break-all"></p>
+                                <div class="row">
+                                    <input type="text" id="userLabels" class="form-control" />
+                                </div>
+                                <p style="color:orangered">Please enter comma(,) separated values</p>
 
-        <div class="col-md-4"><h6>Images</h6></div>
-
-
-
-
-
-
-
-
-
-
-        <div class="col-md-3">
-            <input type="text" class="form-control" id="imageUrlInput" />
-
-
+                            </div>
+                        </div>
+                        <input type="hidden" id="imageContent" />
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnSubmitModal" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-sm" id="uploadImageButton">Upload</button>
+        <div class="row">
+            <div class="input-group mb-3 col-md-12">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="txtFileInput">
+                    <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                </div>
+                @*<div class="input-group-append">
+                    <button class="btn-file" id="btnFileUpload">Upload</button>
+                </div>*@
+                <span>&nbsp;OR&nbsp;</span>
+                <input type="text" class="form-control" id="imageUrlInput" placeholder="Enter Url">
+                @*<label class="custom-file-l" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Enter Url</label>*@
+                <div class="input-group-append">
+                    <button class="btn-file" id="uploadImageButton">Upload</button>
+                </div>
+            </div>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-sm" id="imagesDeleteButton">Delete</button>
-        </div>
-        <div class="col-md-1">
-            <button class="btn btn-sm d-none" id="imagesDeleteCancelButton">Cancel</button>
-        </div>
-    </div>
+        <div class="row">
 
-    </div>
+            <div class="col-md-4"><h6>Images</h6></div>
+
+
+
+
+
+
+
+
+
+
+            @*<div class="col-md-3">
+                <input type="text" class="form-control" id="imageUrlInput" />
+
+
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm" id="uploadImageButton">Upload</button>
+            </div>*@
+            <div class="col-md-1">
+                <button class="btn-file" id="imagesDeleteButton">Delete</button>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-sm d-none" id="imagesDeleteCancelButton">Cancel</button>
+            </div>
+        </div>
+
+    </div>    <!-- Modal -->
+    
     <div class="row">
         <div class="col-md-2" style="padding-top:300px;position:fixed;z-index:1">
             <div class="row" style="margin-right: 20px">
@@ -195,14 +248,14 @@
             <div class="row">
 
                 <div class="col-md-6"><h6>Images</h6></div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" id="imageUrlInput" />
+                @*<div class="col-md-3">
+                        <input type="text" class="form-control" id="imageUrlInput" />
 
 
-                </div>
-                <div class="col-md-1">
-                    <button class="btn btn-sm" id="uploadImageButton">Upload</button>
-                </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-sm" id="uploadImageButton">Upload</button>
+                    </div>*@
                 <div class="col-md-1">
                     <button class="btn btn-sm" id="imagesDeleteButton">Delete</button>
                 </div>
@@ -211,7 +264,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="container-fluid" style="padding-top:260px; z-index:-1">
+                <div class="container-fluid" style="padding-top:260px">
                     @*<div class="row">
                             <div class="col-md-6"><h6>Images</h6></div>
                             <div class="col-md-3">
@@ -255,8 +308,18 @@
     <div class="col-md-4">
 
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    @*<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script>
+        $('.custom-file-input').on('change', function () {
+            debugger;
+            readURL(this);
+            console.log("File upload complete");
+        });
+            //$('#btnFileUpload').on('click', function () {
+            //    readURL($('#txtFileInput'));
+            //});
+    </script>
 </body>
 
 

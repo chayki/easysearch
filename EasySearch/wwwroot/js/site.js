@@ -378,10 +378,38 @@ $(document.body).on("click", "#uploadImageButton", function () {
         return false;
     }
 
+    $('#imgPreview').attr('src', url);
+    getImageLabels("", url);
+    //$('#imageContent').val(reader.result);
+
+    //$("#loading").show();
+    //$.ajax({
+    //    type: "GET",
+    //    url: "/UploadImage?targetPath=" + targetPath + "&url=" + url,
+    //    headers: {
+    //        'id_token': getIdTokenFromCookie()
+    //    },
+    //    contentType: "application/json",
+    //    dataType: "json",
+    //    success: function (response) {
+    //        getDirectoryItemsAndPopulate(targetPath);
+    //        $("#imageUrlInput").val("");
+    //        alert("upload successful");
+    //    },
+    //    failure: function (response) {
+    //        alert("upload failed");
+    //    },
+    //    complete: function () {
+    //        $('#loading').hide();
+    //    }
+    //});
+});
+
+function uploadImageFromUrl(targetPath, url, imageLabels) {
     $("#loading").show();
     $.ajax({
         type: "GET",
-        url: "/UploadImage?targetPath=" + targetPath + "&url=" + url,
+        url: "/UploadImage?targetPath=" + targetPath + "&url=" + url + "&labels=" + encodeURIComponent(imageLabels),
         headers: {
             'id_token': getIdTokenFromCookie()
         },
@@ -391,6 +419,7 @@ $(document.body).on("click", "#uploadImageButton", function () {
             getDirectoryItemsAndPopulate(targetPath);
             $("#imageUrlInput").val("");
             alert("upload successful");
+            $('#exampleModal').modal('hide');
         },
         failure: function (response) {
             alert("upload failed");
@@ -399,7 +428,61 @@ $(document.body).on("click", "#uploadImageButton", function () {
             $('#loading').hide();
         }
     });
-});
+}
+
+function uploadImageFile(targetPath, imageContent, imageLabels) {
+    $("#loading").show();
+    var postData = { "imageContent": imageContent, "targetPath": targetPath, "labels": imageLabels};
+    $.ajax({
+        type: "POST",
+        url: "/UploadImageFile",
+        headers: {
+            'id_token': getIdTokenFromCookie()
+        },
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(postData),
+        success: function (response) {
+            getDirectoryItemsAndPopulate(targetPath);
+            $("#imageUrlInput").val("");
+            alert("upload successful");
+            $('#exampleModal').modal('hide');
+        },
+        failure: function (response) {
+            alert("upload failed");
+        },
+        complete: function () {
+            $('#loading').hide();
+        }
+    });
+}
+
+function getImageLabels(imageContent, imageUrl) {
+    $("#loading").show();
+    var postData = { "imageContent": imageContent, "imageUrl": imageUrl };
+    $.ajax({
+        type: "POST",
+        url: "/GetImageLabels",
+        headers: {
+            'id_token': getIdTokenFromCookie()
+        },
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(postData),
+        success: function (response) {
+            debugger;
+            $('#imageLabels').text(response.join());
+            $('#exampleModal').modal('show');
+                    },
+        failure: function (response) {
+            alert("label extraction failed failed");
+        },
+        complete: function () {
+            $('#loading').hide();
+        }
+    });
+}
+
 
 function checkUrl(url) {
     //regular expression for URL
@@ -445,4 +528,38 @@ function signOut() {
     window.location.href = '/';
 }
 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        //reader.onload = function (e) {
+        //    $('#imgPreview').attr('src', e.target.result);
+        //}
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function (e) {
+            $('#imgPreview').attr('src', e.target.result);
+            //uploadImageFile(getCurrentFolderPath(), reader.result);
+            //debugger;
+            getImageLabels(reader.result, "");
+            $('#imageContent').val(reader.result);
+            
+        };
+    }
+}
+
+$("#btnSubmitModal").click(function () {
+    var imageContent = $("#imageContent").val();
+    var imageLabels = $("#imageLabels").text();
+    var userLabels = $("#userLabels").val();
+    var imageUrl = $("#imageUrlInput").val();
+    finalLabels = imageLabels + "," + userLabels;
+    arrFinalLabels = finalLabels.split(',');
+    debugger;
+    if (imageContent !== "") {
+        uploadImageFile(getCurrentFolderPath(), imageContent, arrFinalLabels);
+    } else if (imageUrl !== "") {
+        uploadImageFromUrl(getCurrentFolderPath(), imageUrl, arrFinalLabels);
+    }
+    $("#userLabels").val('');
+    });
 
