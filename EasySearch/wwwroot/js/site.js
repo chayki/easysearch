@@ -364,7 +364,13 @@ $(document.body).on("click", "#imagesDeleteCancelButton", function () {
 });
 
 $(document.body).on("click", "#btnImageSearch", function () {
-    var searchText = $('#txtImageSearch').val();
+    var category = $('#category :selected').val();
+    var searchText = "";
+    if (category == "") {
+        searchText = $('#txtImageSearch').val();
+    } else {
+        searchText = category + ' ' + $('#txtImageSearch').val();
+    }
     var folderPath = getCurrentFolderPath();
     searchForImagesAndPopulate(folderPath, searchText);
     return false;
